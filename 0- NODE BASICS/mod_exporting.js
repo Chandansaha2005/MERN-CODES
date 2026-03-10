@@ -8,3 +8,4 @@ console.log(ex)
 // external modules that exist in separate files"
 
 console.log(ex.sum(2,2)) // using the Function that we are exporting
+console.log(ex.pi) // using the variable that we are exporting
