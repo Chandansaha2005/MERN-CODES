@@ -1,2 +1,2 @@
 let print = console.log;
-print("hello world")
+prnt("hello world")
