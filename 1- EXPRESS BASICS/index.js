@@ -39,4 +39,26 @@ app.post("/", (req, res) => {
 
 
 
+// app.get("/:username", (req, res) => {
+//     print(req.params)  //[Object: null prototype] { username: 'chandan' }
+//     res.send("you connected with root path")
+// })
 
+// app.get("/:username/:id", (req, res) => {
+//     print(req.params)  //[Object: null prototype] { username: 'chandan', id: '5165' }
+//     res.send("you connected with root path")
+// })
+
+// app.get("/:username",(req,res) =>{
+//     let {username,id}=req.params;
+//     res.send(`welcome to the page, ${username}`)
+// })
+
+app.get("/search",(req,res) =>{
+    // print(req.query)
+    let {q}=req.query
+    if(!q){
+        res.send()
+    }
+    res.send(`search result for ${q}`)
+})
