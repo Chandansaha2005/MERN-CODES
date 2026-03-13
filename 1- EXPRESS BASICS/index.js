@@ -29,6 +29,7 @@ app.get("/route1", (req, res) => {
 app.get("/route2", (req, res) => {
     res.send("you connected with route2")
 })
+
 // app.get('*', (req, res) => {
 //     res.send("Page not found");
 // });
