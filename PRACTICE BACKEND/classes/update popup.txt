@@ -1,0 +1,126 @@
+Frontend 
+--------------------------
+install -> npm i reactjs-popup
+
+home.js
+
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "./index.css";
+import Popup from "reactjs-popup";
+
+function Home(){
+    const [name, setName]=useState("")
+    const [email, setEmail]=useState("")
+    const [password, setPassword]=useState("");
+    
+    const [data,setData] = useState([]);
+    useEffect(()=>{
+        fetch("http://localhost:3001/fetch-detail",{
+            method: "GET"
+        })
+        .then((res) => res.json())
+        .then((s) => {
+            console.log(s,"userData");
+            setData(s.data);
+        })
+    }, []);
+    const handleSubmit = (id) =>{
+        axios.post('http://localhost:3001/updateuser',{id,name,email,password})
+        .then(res=>{
+            if(res.data.x==="Updated"){
+                alert("updated Successfully");
+                window.location.reload();
+            }
+            else{
+                alert("updated Unsuccessfully");
+                window.location.reload();
+            }
+        })
+    }
+    const deleteUser = (id,name) => {
+        console.log("Deleting");
+        if(window.confirm(`Are you sure you to delete ${name}`)){
+            axios.post('http://localhost:3001/deleteuser',{id})
+            .then((res) => {
+               if(res.data.x==="Delete"){
+                alert("deleted Successfully");
+                window.location.reload();
+               }
+               else{
+                alert("deleted Unsuccessfully");
+                window.location.reload();
+            }
+            })
+        }
+    };
+        
+    return(
+        <>
+        <center><h2>User Details</h2></center>
+        <div className="card-body py-md-4">
+                <table style={{width: 800}}>
+                    <tr>
+                        <th>Id</th>
+                        <th>name</th>
+                        <th>email</th>
+                        <th>Password</th>
+                    </tr>
+                    {data.map((k) => {
+                        return(
+                            <tr>
+                                <td>{k._id}</td>
+                                <td>{k.name}</td>
+                                <td>{k.email}</td>          
+                                <td>{k.password}</td>  
+                                <td>
+                                    <button onClick={() => deleteUser(k._id,k.name)}>Delete</button>
+                                </td>      
+                                <td>
+                                    <Popup trigger={<button >Update</button>} 
+                                        position={"right center"}
+                                    >
+                                        <div style={{display:"flow"}}>
+                                            <input type="text" placeholder={k.name} onChange={(e)=>setName(e.target.value)}/>
+                                            <input type="text" placeholder={k.email} onChange={(e)=>setEmail(e.target.value)}/>
+                                            <input type="password" placeholder={k.password}onChange={(e)=>setPassword(e.target.value)}/>
+                                            <button onClick={()=>handleSubmit(k._id)}>update</button>
+                                        </div>
+                                    </Popup>
+                                </td>  
+                            </tr>
+                        );
+                    })}
+                </table>
+        </div>
+        </>
+    );
+}
+export default Home;
+
+
+Backend
+
+index.js
+
+app.post("/updateuser", async(req, res) => {
+  const {id,name,email,password} = req.body;
+  let update = {}
+  if(name && name !=="")
+    update.name = name
+  if(email && email !=="")
+    update.email = email
+  if(password && password !==""){
+    const salt= await b1.genSalt(6);
+    const spass= await b1.hash(password, salt);
+    update.password = spass
+  }
+  console.log(id);
+  try{
+    const demo= await User.updateOne({_id: id},{$set:update});
+    console.log("success");
+    res.status(200).send({x:"Updated"});
+  }catch(err){
+    console.log(err);
+  }
+})

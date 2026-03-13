@@ -1,0 +1,102 @@
+BACKEND IN THUNDER CLIENT
+-----------------------------
+npx create-react-app file_name   --->frontend
+npm init
+npm i express
+npm i mongoose
+npm i -D nodemon
+
+npm run dev   --> backend
+npm start   --> frontend
+
+  "start": "node index.js",
+    "dev": "nodemon index.js"
+
+-----------------------------------------------------------------
+
+//index.js
+
+const connectToMongo = require("./db")
+const express = require('express')
+
+connectToMongo()
+const app = express()
+const port = 3000
+
+app.use(express.json())
+app.use('/api/auth', require('./routes/auth'))
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
+
+
+-----------------------------------------------------------------------------------------------------------
+
+//db.js
+
+
+const mongoose= require('mongoose');
+
+const uri="mongodb://localhost:27017/"
+
+
+const connectToMongo=() =>{
+    mongoose.connect(uri);
+    console.log("Connected successful");
+}
+
+module.exports = connectToMongo
+
+
+---------------------------------------------------------------------------------------------------------------
+
+
+//Note.js
+
+
+//const { type } = require('@testing-library/user-event/dist/type')
+const mongoose=require('mongoose');
+const {Schema}= mongoose;
+
+const UserSchema = new Schema({
+    name:{
+        type: String,
+        required: true
+    },
+    email:{
+        type: String,
+        required: true,
+        unique: true
+    },
+    password:{
+        type: String,
+        required: true
+    }
+})
+
+module.exports= mongoose.model('user', UserSchema)
+
+
+-------------------------------------------------------------------------------------------------
+
+
+//auth.js
+
+
+const express = require('express');
+const User=require('../models/Note');
+const route= express.Router();
+
+route.post('/',(req,res)=>{
+   console.log(req.body);
+   const user= User(req.body);
+   user.save()
+   res.send(req.body);
+})
+
+module.exports = route

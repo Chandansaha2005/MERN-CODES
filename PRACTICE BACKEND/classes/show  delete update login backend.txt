@@ -1,0 +1,61 @@
+const connectToMongo = require("./db")
+const express = require('express')
+const User=require('./models/Note');
+connectToMongo()
+const {body, validationResult}=require('express-validator');
+const b1=require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const jwt_str="React JS";
+const app = express()
+const port = 3000
+app.use(express.json())
+app.use('/api/auth', require('./routes/auth'))
+
+app.post('/login',[
+  body('email','Enter a valid email').isEmail(),
+  body('password','password cannot be empty').exists(),
+  ], async (req,res)=>{
+    const errors=validationResult(req);
+    if(!errors.isEmpty()){
+       return res.status(500).json({errors:errors.array()});
+    }
+    const {email,password}=req.body;
+    try {
+       let user = await User.findOne({email:email});//user=(._id,.name,.email,.password)
+       if (!user){
+          return res.status(406).json({error:"user not exist"})
+       }
+       const passcom = await b1.compare(password, user.password);
+       //console.log(b1.decodeBase64());
+       console.log("Page Password = "+password)
+       console.log("DB Password = "+user.password)
+       if(!passcom){
+        return res.status(406).json({error:"password miss match"})
+       }
+       const data={user:{id:user.id}}
+       const authtoken = jwt.sign(data, jwt_str);
+       res.status(400).json({x:"Login Successful!!!"});
+  
+    } catch (error) {
+       console.error(error.massage);
+       res.status(700).send("Some Error occured");
+    }
+    
+  })
+app.get("/fetch-detail", async(req,res) => {
+  try{
+    const allUser = await User.find({});
+    res.status(500).json({data:allUser})
+  }catch(err){
+    console.log(err)
+  }
+})   
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
+
+
+
+
+

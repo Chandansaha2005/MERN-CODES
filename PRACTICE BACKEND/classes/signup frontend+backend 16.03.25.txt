@@ -1,0 +1,250 @@
+frontend
+npx create-react-app@latest myapp
+npm i react-router-dom
+npm i axios
+
+backend
+npm i cors
+
+frontend
+App.js
+------------------------
+import './App.css';
+import Signup from './Signup'
+import Home from './home'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+
+function App() {
+
+  return (
+    <>
+    <BrowserRouter>
+      <Routes>      
+        <Route path="/register" element={<Signup/>}></Route>
+        <Route path="/home" element={<Home/>}></Route>
+      </Routes>
+    </BrowserRouter>
+    </>
+  );
+}
+
+export default App;
+
+----------------------------------------------------------------------------
+Signup.js
+
+import { useState } from "react";
+import {useNavigate } from "react-router-dom";
+import axios from 'axios'
+
+
+function Signup(props){
+    
+    const [name, setName]=useState()
+    const [email, setEmail]=useState()
+    const [password, setPassword]=useState()
+    const navigate = useNavigate()
+
+    const handleSubmit=(e)=>{
+        
+            e.preventDefault()
+            axios.post('http://localhost:3001/register',{name, email,password})
+            .then(result=>{console.log(result)
+                if (result.data==="success")
+                   alert("Signup Successful!!!!")
+                  // navigate('/home')
+            })
+            .catch(err=>console.log(err))
+    }
+
+    return(
+      <>
+        <div className="container">
+  <div className="row justify-content-center">
+  <div className="col-md-5">
+   <div className="card">
+     <h2 className="card-title text-center">Register <a href="http://opensnippets.com">open snippets</a></h2>
+      <div className="card-body py-md-4">
+       <form _lpchecked="1" onSubmit={handleSubmit}>
+          <div className="form-group">
+            Enter the Username
+             <input type="text" className="form-control" id="name" placeholder="Name" onChange={(e)=>setName(e.target.value)}/>
+        </div>
+        <div className="form-group">
+        Enter the Email Id
+             <input type="email" className="form-control" id="email" placeholder="Email" onChange={(e)=>setEmail(e.target.value)}/>
+                            </div>
+   <div className="form-group">
+    Enter the Password
+     <input type="password" className="form-control" id="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)}/>
+   </div>
+   <div className="d-flex flex-row align-items-center justify-content-between">
+                                <button className="btn btn-primary">Create Account</button>
+          </div>
+       </form>
+     </div>
+  </div>
+</div>
+</div>
+</div>
+</>
+    );
+}
+
+export default Signup;
+----------------------------------------------------------------------
+home.js
+----------------
+
+function home(){
+    return(
+        <h2>Home</h2>
+    );
+}
+export default home;
+---------------------------------------
+backend
+index.js
+-----------
+const connectToMongo = require("./db")
+const express = require('express')
+const cors=require('cors')
+
+const User=require('./models/Note');
+connectToMongo()
+const {body, validationResult}=require('express-validator');
+const b1=require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const jwt_str="React JS";
+
+const app = express()
+const port = 3001
+app.use(cors({ origin: 'http://localhost:3000' }));
+
+app.use(express.json())
+app.use('/api/auth', require('./routes/auth'))
+
+app.post('/register',async (req,res)=>{
+  const errors=validationResult(req);
+  if(!errors.isEmpty()){
+     return res.status(500).json({errors:errors.array()});
+  }
+  try {
+     let user = await User.findOne({email: req.body.email});
+     if (user){
+        return res.status(404).json({error:"user already exist"})
+     }
+     const salt= await b1.genSalt(6);
+     const spass= await b1.hash(req.body.password, salt);
+     console.log(spass);
+     user =await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: spass,
+     });
+     const data={
+      user:{
+        id:user.id
+      }
+     }
+     const authtoken = jwt.sign(data, jwt_str);
+     //res.json(authtoken)
+      res.status(200).send({x:"success"});
+
+     //res.json(user)
+  } catch (error) {
+     console.error(error.massage);
+     res.status(600).send("Some Error occured");
+  }
+  
+})
+
+
+-------------------------------------------------------
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
+
+---------------------------------------------
+frontend 
+package.json
+
+{
+  "name": "myapp",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^13.5.0",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
+    "axios": "^1.8.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.3.0",
+    "react-scripts": "^5.0.1",
+    "schema-utils": "^4.3.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^5.2.0"
+  }
+}
+
+--------------------------------------------
+backend
+package.json
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
+
+
+

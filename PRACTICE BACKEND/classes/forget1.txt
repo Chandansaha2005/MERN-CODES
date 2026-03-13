@@ -1,0 +1,300 @@
+forget.js
+-----------------------------------------
+import { useState } from "react";
+function Forgot(props){
+    const [email, setEmail]=useState()
+
+    const handleSubmit=(e)=>{
+        e.preventDefault()
+        fetch("http://localhost:3001/forgot-password",{
+          method: "POST",
+          crossDomain: "true",
+          headers:{
+            "Content-Type": "application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({
+            email,
+          }),
+      })
+            .then((res)=> res.json())
+            .then((result) => {
+              console.log(result,"userRegister");            
+            })
+            
+    }
+    return(
+<div className="container">
+  <div className="row justify-content-center">
+  <div className="col-md-5">
+   <div className="card">
+     <h2 className="card-title text-center">Forgot Password <a href="http://opensnippets.com">open snippets</a></h2>
+      <div className="card-body py-md-4">
+       <form _lpchecked="1" onSubmit={handleSubmit}>
+        <div className="form-group">
+             <input type="email" className="form-control" id="email" placeholder="Email" required onChange={(e)=>setEmail(e.target.value)}/>
+                            </div>
+                                                   
+
+   <div className="d-flex flex-row align-items-center justify-content-between">
+                                <button className="btn btn-primary">Send</button>
+          </div>
+       </form>
+     </div>
+  </div>
+</div>
+</div>
+</div>
+);
+}
+
+export default Forgot;
+
+backend ---> index.js
+
+install --> npm i ejs
+
+const connectToMongo = require("./db")
+const express = require('express')
+const cors=require('cors')
+const User=require('./models/Note');
+const {body, validationResult}=require('express-validator');
+const b1=require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const jwt_str="React JS";
+const ejs = require('ejs');
+
+connectToMongo()
+const app = express()
+app.use(express.json())
+app.use(cors())
+app.set("view engine","ejs")
+app.use(express.urlencoded({extended: false}))
+
+
+app.post('/register',async (req,res)=>{
+  const errors=validationResult(req);
+  if(!errors.isEmpty()){
+     return res.status(500).json({errors:errors.array()});
+  }
+  try {
+     let user = await User.findOne({email: req.body.email});
+     if (user){
+        return res.status(404).json({error:"user already exist"})
+     }
+     const salt= await b1.genSalt(6);
+     const spass= await b1.hash(req.body.password, salt);
+     console.log(spass);
+     user =await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: spass,
+     });
+     const data={
+      user:{
+        id:user.id
+      }
+     }
+     const authtoken = jwt.sign(data, jwt_str);
+//     res.json(authtoken)
+       res.json("Success")
+     //res.json(user)
+  } catch (error) {
+     console.error(error.massage);
+     res.status(600).send("Some Error occured");
+  }
+  app.post('/login',[body('email','Enter a valid email').isEmail(),
+    body('password','password cannot be empty').exists(),
+    ], async (req,res)=>{
+      const errors=validationResult(req);
+      if(!errors.isEmpty()){
+         return res.status(500).json({errors:errors.array()});
+      }
+      const {email,password}=req.body;
+      try {
+         let user = await User.findOne({email});
+         if (!user){
+            return res.status(406).json({error:"user not exist"})
+         }
+         const passcom = await b1.compare(password, user.password);
+         //console.log(b1.decodeBase64());
+         console.log("DB Password = "+password)
+         console.log("Page Password = "+user.password)
+         if(!passcom){
+          return res.status(406).json({error:"password miss match"})
+         }
+         const data={
+          user:{
+            id:user.id
+          }
+         }
+         const authtoken = jwt.sign(data, jwt_str);
+         res.json("Success")
+    
+      } catch (error) {
+         console.error(error.massage);
+         res.status(700).send("Some Error occured");
+      }
+      
+    })
+   
+})
+app.get("/fetch-detail", async(req,res) => {
+
+   try{
+     const allUser = await User.find({});
+     res.send({status:"ok", data:allUser})
+   }catch(err){
+     console.log(err)
+   }
+ })
+ app.post("/deleteuser", async(req, res) => {
+   const {id} = req.body;
+   //console.log(userid);
+   try{
+     const demo= await User.deleteOne({_id: id});
+     //console.log(res.json());
+     res.status(200).send({x:"Delete"});
+     
+   }catch(err){
+     console.log(err);
+   }
+ })
+ app.post("/updateuser", async(req, res) => {
+   const {id,name,email,password} = req.body;
+   let update = {}
+   if(name && name !=="")
+     update.name = name
+   if(email && email !=="")
+     update.email = email
+   if(password && password !==""){
+     const salt= await b1.genSalt(6);
+     const spass= await b1.hash(password, salt);
+     update.password = spass
+   }
+   console.log(id);
+   try{
+     const demo= await User.updateOne(
+       {_id: id},
+       {$set:update}
+     );
+     console.log("success");
+     res.status(200).send({x:"update"});
+   }catch(err){
+     console.log(err);
+   }
+ })
+ app.post('/forgot-password', async (req,res) =>{
+  const {email} = req.body;
+  try{
+    const oldUser = await User.findOne({email});
+    if(!oldUser){
+      return res.send("User Not Exists!!");
+    }
+    const secret = jwt_str + oldUser.password;
+    const token = jwt.sign({email: oldUser.email, id: oldUser._id}, secret, {expiresIn: "5m"});
+    console.log(token);
+    const link = `http://localhost:3001/reset-password/${oldUser._id}/${token}`;
+    console.log(link);
+    res.status(200).send({x:"Update"});
+  }
+  catch(error){}
+})
+app.get("/reset-password/:id/:token", async(req, res) =>{
+  const {id, token}=req.params;
+  console.log(req.params);
+  const oldUser = await User.findOne({_id: id});
+  if(!oldUser){
+    return res.send("User Not Exists!!");
+  }
+  const secret = jwt_str + oldUser.password;
+  try{
+    const verify = jwt.verify(token, secret);
+    res.render("index",{email:verify.email, status:"not verified"});
+    
+  }catch(error){
+    console.log(error);
+      res.send("Not except");
+  }
+})
+
+app.post("/reset-password/:id/:token", async(req, res) =>{
+  const {id, token}=req.params;
+  const {password}=req.body;
+  console.log-(req.params);
+  const oldUser = await User.findOne({_id: id});
+    if(!oldUser){
+      return res.send("User Not Exists!!");
+    }
+    const secret = jwt_str + oldUser.password;
+    try{
+      const verify = jwt.verify(token, secret);
+      const encryptedPass= await b1.hash(password, 10);
+      await User.updateOne(
+        {
+          _id: id,
+        },
+        {
+          $set: {
+            password: encryptedPass,
+          },
+        }
+      );
+      //res.send({x: "updated"})
+      res.render("index", { email: verify.email, status:"verified"})
+    }catch(error){
+      console.log(error);
+      res.send("Not Verified");
+    }
+})
+app.listen(3001,()=>{
+  console.log("server is ready")
+})
+
+--------------------------------
+bakend
+views(folder)---> index.ejs
+---------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UFT-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script>
+        if("<%-status%>"==="verified"){
+            if(confirm("Do you want to login?")){
+                window.location.href="http://localhost:3000/login"
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1><%=email%></h1>
+    <form action="" method="post">
+        <input type="password" placeholder ="new password" name="password" id="password" /><br/>
+        <input type="password" placeholder ="confirm password" name="confirm-password" id="confirm-password" /><br/>
+            <input type="submit" value="submit" />
+    </form>
+</body>
+</html>
+
+forget.js--> index.js(backend)  app.post("/forget-password")---> backend api app.post("/reset-password") --->   rendering
+  views(folder) index.ejs   --> password change kore --> forward frontend /login.js
+ 
+             <%=variable name%>    ---> scriptlet
+
+
+
+
+
+
+
+
+
+
+
+
+

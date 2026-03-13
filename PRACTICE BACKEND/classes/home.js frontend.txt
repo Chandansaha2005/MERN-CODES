@@ -1,0 +1,57 @@
+home.js frontend
+-------------------------------
+import { useEffect, useState } from "react";
+import axios from 'axios';
+import Popup from "reactjs-popup";
+
+function Home(){
+    const [data,setData] = useState([]);
+    useEffect(()=>{
+        fetch("http://localhost:3001/fetch-detail",{
+            method: "GET"
+        })
+        .then((res) => res.json())
+        .then((s) => {
+            console.log(s,"userData");
+            setData(s.data);
+        })
+    }, []);
+        
+    return(
+        <>
+        <h2>Welcome User here your customers data</h2>
+        <div className="card-body py-md-4">
+                <table style={{width: 800}}>
+                    <tr>
+                        <th>Id</th>
+                        <th>name</th>
+                        <th>email</th>
+                        <th>Password</th>
+                    </tr>
+                    {data.map((k) => {
+                        return(
+                            <tr>
+                                <td>{k._id}</td>
+                                <td>{k.name}</td>
+                                <td>{k.email}</td>          
+                                <td>{k.password}</td>          
+                            </tr>
+                        );
+                    })}
+                </table>
+        </div>
+        </>
+    );
+}
+export default Home;
+------------------------------------------------
+backend index.js
+----------------------
+app.get("/fetch-detail", async(req,res) => {
+   try{
+     const allUser = await User.find({});
+     res.send({status:"ok", data:allUser})
+   }catch(err){
+     console.log(err)
+   }
+ })

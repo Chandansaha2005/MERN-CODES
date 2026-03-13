@@ -1,0 +1,42 @@
+app.post("/deleteuser", async(req, res) => {
+   const {id} = req.body;
+   console.log(id);
+   try{
+     const demo= await User.findOne({_id: id});
+     //console.log(res.json());
+     if(!demo)
+      return res.status(500).json({x:"User ID Not Exist"});
+    else
+    {
+      const p=await User.deleteOne({_id:id});
+     res.status(200).send({x:"Delete"});
+    }
+     
+   }catch(err){
+     console.log(err);
+   }
+ })
+ app.post("/updateuser", async(req, res) => {
+   const {id,name,email,password} = req.body;
+   let update = {}
+   if(name && name !=="")
+     update.name = name
+   if(email && email !=="")
+     update.email = email
+   if(password && password !==""){
+     const salt= await b1.genSalt(6);
+     const spass= await b1.hash(password, salt);
+     update.password = spass
+   }
+   console.log(id);
+   try{
+     const demo= await User.updateOne(
+       {_id: id},
+       {$set:update}
+     );
+     console.log("success"+demo);
+     res.status(200).send({x:"update"});
+   }catch(err){
+     console.log(err);
+   }
+ })
