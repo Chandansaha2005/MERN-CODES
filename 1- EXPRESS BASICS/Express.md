@@ -14,7 +14,7 @@ It is used for server side programming.
 - Response
 
 # Getting Start With Express
-
+```
 let print = console.log
 const express = require("express")
 const app = express()// now "app" is a surver instence
@@ -25,9 +25,10 @@ app.listen(port,()=> {
     print(`app is listening on the port ${port}`)
 })
 
-
-'''
-
+```
 
 ## port
 Ports are the logical endpoints of a network connection that is used to exchange information between a web server and a web client 
+
+## routing
+It is process of selecting a path Haryana Katrina Kaif for traffic in a network or between or across multiple networks. 
