@@ -1,0 +1,257 @@
+20/07/2024(LOGIN + SIGNUP)
+-----------------------------------------
+backend
+--------------
+1) npm i express-validator
+2) npm i bcryptjs
+3)npm i jsonwebtoken
+4) npm i cors
+
+frontend
+---------------
+npx create-react-app@latest myproject
+
+npm i axios
+npm i react-router-dom
+
+Backend
+index.js
+------------
+
+const connectToMongo = require("./db")
+const express = require('express')
+const cors=require('cors')
+const User=require('./models/Note');
+const {body, validationResult}=require('express-validator');
+const b1=require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { status } = require("init");
+const jwt_str="React JS";
+
+connectToMongo()
+const app = express()
+app.use(express.json())
+app.use(cors())
+
+app.post('/register',async (req,res)=>{
+  const errors=validationResult(req);
+  if(!errors.isEmpty()){
+     return res.status(500).json({errors:errors.array()});
+  }
+  try {
+     let user = await User.findOne({email: req.body.email});
+     if (user){
+        return res.status(404).json({error:"user already exist"})
+     }
+     const salt= await b1.genSalt(6);
+     const spass= await b1.hash(req.body.password, salt);
+     console.log(spass);
+     user =await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: spass,
+     });
+     const data={
+      user:{
+        id:user.id
+      }
+     }
+     const authtoken = jwt.sign(data, jwt_str);
+//     res.json(authtoken)
+       res.json("Success")
+     //res.json(user)
+  } catch (error) {
+     console.error(error.massage);
+     res.status(600).send("Some Error occured");
+  }
+  
+})
+app.post('/login',[body('email','Enter a valid email').isEmail(),
+   body('password','password cannot be empty').exists(),
+   ], async (req,res)=>{
+     const errors=validationResult(req);
+     if(!errors.isEmpty()){
+        return res.status(500).json({errors:errors.array()});
+     }
+     const {email,password}=req.body;
+     try {
+        let user = await User.findOne({email});
+        if (!user){
+           return res.status(406).json({error:"user not exist"})
+        }
+        const passcom = await b1.compare(password, user.password);
+        //console.log(b1.decodeBase64());
+        console.log("DB Password = "+password)
+        console.log("Page Password = "+user.password)
+        if(!passcom){
+         return res.status(406).json({error:"password miss match"})
+        }
+        const data={
+         user:{
+           id:user.id
+         }
+        }
+        const authtoken = jwt.sign(data, jwt_str);
+        res.json("Success")
+   
+     } catch (error) {
+        console.error(error.massage);
+        res.status(700).send("Some Error occured");
+     }
+     
+   })
+ 
+app.listen(3001,()=>{
+  console.log("server is ready")
+})
+
+
+signup.JS
+-----------------
+
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios'
+
+
+function Signup(props){
+    
+    const [name, setName]=useState()
+    const [email, setEmail]=useState()
+    const [password, setPassword]=useState()
+    const navigate = useNavigate()
+
+    const handleSubmit=(e)=>{
+        
+            e.preventDefault()
+            axios.post('http://localhost:3001/register',{name, email,password})
+            .then(result=>{console.log(result)
+              if (result.data==="Success")
+              {
+                navigate("/login")   
+              }
+              else
+              {
+                navigate("/login")   
+              }
+    })
+            .catch(err=>console.log(err))
+    }
+
+    return(
+        <div className="container">
+  <div className="row justify-content-center">
+  <div className="col-md-5">
+   <div className="card">
+     <h2 className="card-title text-center">Register <a href="http://opensnippets.com">open snippets</a></h2>
+      <div className="card-body py-md-4">
+       <form _lpchecked="1" onSubmit={handleSubmit}>
+          <div className="form-group">
+             <input type="text" className="form-control" id="name" placeholder="Name" onChange={(e)=>setName(e.target.value)}/>
+        </div>
+        <div className="form-group">
+             <input type="email" className="form-control" id="email" placeholder="Email" onChange={(e)=>setEmail(e.target.value)}/>
+                            </div>
+                            
+                          
+   <div className="form-group">
+     <input type="password" className="form-control" id="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)}/>
+   </div>
+   <div className="d-flex flex-row align-items-center justify-content-between">
+   <Link to="/login">Login</Link>
+                                <button className="btn btn-primary">Create Account</button>
+          </div>
+       </form>
+     </div>
+  </div>
+</div>
+</div>
+</div>
+    );
+}
+
+export default Signup;
+
+LOGIN.JS
+----------------
+
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios'
+
+function Login(props){
+    const [email, setEmail]=useState()
+    const [password, setPassword]=useState()
+    const navigate = useNavigate()
+    const handleSubmit=(e)=>{
+        e.preventDefault()
+            axios.post('http://localhost:3001/login',{email,password})
+            .then(result=>{console.log(result)
+            if(result.data === "Success"){
+               // props.showAlert("Account login Successfully","Success")
+                navigate('/home')
+            }else{
+              //props.showAlert("User details mismatch","error")
+              navigate('/logout')
+            }
+            
+        }).catch(err=> console.log(err))
+    }
+    
+ return(
+  <div className="container">
+  <div className="row justify-content-center">
+  <div className="col-md-5">
+   <div className="card">
+     <h2 className="card-title text-center">Login <a href="http://opensnippets.com">open snippets</a></h2>
+      <div className="card-body py-md-4">
+       <form _lpchecked="1" onSubmit={handleSubmit}>
+        <div className="form-group">
+             <input type="email" className="form-control" id="email" placeholder="Email" required onChange={(e)=>setEmail(e.target.value)}/>
+                            </div>
+                            
+                          
+   <div className="form-group">
+     <input type="password" className="form-control" id="password" placeholder="Password" required onChange={(e)=>setPassword(e.target.value)}/>
+   </div>
+   <div className="d-flex flex-row align-items-center justify-content-between">
+   <Link to="/forgot">Forgot Password.</Link>
+                                <button className="btn btn-primary">Login</button>
+          </div>
+       </form>
+     </div>
+  </div>
+</div>
+</div>
+</div>
+
+ );
+}
+
+export default Login;
+
+APP.JS
+-------------
+
+import logo from './logo.svg';
+import './App.css';
+import Signup from './signup'
+import Login from './login'
+import Logout from './logout'
+import Home from './home'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+function App() {
+  return (
+<BrowserRouter>
+<Routes>
+<Route path="/register" element={<Signup />}></Route>
+<Route path="/login" element={<Login />}></Route>
+<Route path="/logout" element={<Logout />}></Route>
+<Route path="/home" element={<Home />}></Route>
+</Routes>
+    </BrowserRouter>    
+  );
+}
+
+export default App;
+
