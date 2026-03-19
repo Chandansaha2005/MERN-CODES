@@ -47,11 +47,4 @@ export default Home;
 ------------------------------------------------
 backend index.js
 ----------------------
-app.get("/fetch-detail", async(req,res) => {
-   try{
-     const allUser = await User.find({});
-     res.send({status:"ok", data:allUser})
-   }catch(err){
-     console.log(err)
-   }
- })
+

@@ -1,46 +1,43 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios'
 
-function Signup(props){
-    
-    const [name, setName] = useState()
+function Login(props){
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const navigate = useNavigate()
-
+    
     const handleSubmit = (e) => {
         e.preventDefault()
         setLoading(true)
         setError("")
         
-        axios.post('http://localhost:3001/register', {name, email, password})
+        axios.post('http://localhost:3001/login', {email, password})
             .then(result => {
                 console.log(result)
-                if (result.data === "Success") {
-                    navigate("/home")   
+                if(result.data === "Success"){
+                    navigate('/home')
                 } else {
-                    setError("Registration failed. Please try again.")
-                    navigate("/register")   
+                    setError("Invalid credentials. Please try again.")
+                    navigate('/logout')
                 }
             })
             .catch(err => {
                 console.log(err)
-                setError("An error occurred. Please try again.")
+                setError("Login failed. Please try again.")
             })
             .finally(() => setLoading(false))
     }
-
+    
     return(
         <div className="min-h-screen bg-gradient-to-br from-primary-100 via-primary-50 to-accent-50 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 {/* Header Section */}
                 <div className="text-center mb-8">
-                    <h1 className="font-montserrat text-4xl font-bold text-primary-900 mb-2">Welcome</h1>
-                    <p className="font-poppins text-primary-700 text-lg">Create your account</p>
+                    <h1 className="font-montserrat text-4xl font-bold text-primary-900 mb-2">Welcome Back</h1>
+                    <p className="font-poppins text-primary-700 text-lg">Sign in to your account</p>
                 </div>
 
                 {/* Main Card */}
@@ -49,21 +46,6 @@ function Signup(props){
                     
                     <div className="p-8 md:p-10">
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Name Input */}
-                            <div className="group">
-                                <label className="font-poppins text-sm font-semibold text-primary-800 block mb-3">
-                                    Full Name
-                                </label>
-                                <input 
-                                    type="text" 
-                                    placeholder="Enter your name"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
-                                    className="w-full px-5 py-3 bg-primary-50 text-primary-900 placeholder-primary-400 rounded-xl border-2 border-primary-200 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-200 transition duration-300 font-poppins"
-                                />
-                            </div>
-
                             {/* Email Input */}
                             <div className="group">
                                 <label className="font-poppins text-sm font-semibold text-primary-800 block mb-3">
@@ -86,7 +68,7 @@ function Signup(props){
                                 </label>
                                 <input 
                                     type="password" 
-                                    placeholder="Enter a strong password"
+                                    placeholder="Enter your password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
@@ -101,40 +83,50 @@ function Signup(props){
                                 </div>
                             )}
 
+                            {/* Forgot Password Link */}
+                            <div className="flex justify-end">
+                                <Link 
+                                    to="/forgot" 
+                                    className="font-poppins text-accent-500 hover:text-accent-600 text-sm font-semibold transition duration-300"
+                                >
+                                    Forgot Password?
+                                </Link>
+                            </div>
+
                             {/* Submit Button */}
                             <button 
                                 type="submit"
                                 disabled={loading}
                                 className="w-full bg-gradient-to-r from-accent-400 to-accent-500 hover:from-accent-500 hover:to-accent-600 disabled:opacity-50 text-white font-montserrat font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105 active:scale-95 shadow-lg mt-8"
                             >
-                                {loading ? 'Creating Account...' : 'Create Account'}
+                                {loading ? 'Signing In...' : 'Sign In'}
                             </button>
                         </form>
 
                         {/* Divider */}
                         <div className="flex items-center gap-4 my-6">
                             <div className="flex-1 h-px bg-primary-200"></div>
-                            <span className="font-poppins text-primary-500 text-sm">Already have an account?</span>
+                            <span className="font-poppins text-primary-500 text-sm">New user?</span>
                             <div className="flex-1 h-px bg-primary-200"></div>
                         </div>
 
-                        {/* Login Link */}
+                        {/* Sign Up Link */}
                         <Link 
-                            to="/login"
+                            to="/register"
                             className="w-full block text-center bg-primary-100 hover:bg-primary-200 text-primary-900 font-poppins font-semibold py-3 px-6 rounded-xl transition duration-300"
                         >
-                            Sign In Here
+                            Create Account
                         </Link>
                     </div>
                 </div>
 
                 {/* Footer Text */}
                 <p className="text-center mt-6 font-poppins text-primary-700 text-sm">
-                    Join us and start your journey today
+                    Secure login with encryption
                 </p>
             </div>
         </div>
     );
 }
 
-export default Signup;
+export default Login;

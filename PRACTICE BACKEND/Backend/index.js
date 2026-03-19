@@ -1,7 +1,7 @@
 const connectToMongo = require("./db")
 const express = require('express')
 const cors=require('cors')
-const User=require('./models/Note');
+const User=require('./models/User');
 const {body, validationResult}=require('express-validator');
 const b1=require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -80,6 +80,14 @@ app.post('/login',[body('email','Enter a valid email').isEmail(),
      
    })
  
+   app.get("/fetch-detail", async(req,res) => {
+      try{
+      const allUser = await User.find({});
+      res.send({status:"ok", data:allUser})
+      }catch(err){
+      console.log(err)
+      }
+   })
 app.listen(3001,()=>{
   console.log("server is ready")
 })
