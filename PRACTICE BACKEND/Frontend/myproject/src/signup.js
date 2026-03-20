@@ -35,7 +35,7 @@ function Signup(props){
     }
 
     return(
-        <div className="min-h-screen bg-gradient-to-br from-primary-100 via-primary-50 to-accent-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-primary-100 via-primary-50 to-secondary-50 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 {/* Header Section */}
                 <div className="text-center mb-8">
@@ -45,7 +45,7 @@ function Signup(props){
 
                 {/* Main Card */}
                 <div className="bg-white rounded-3xl shadow-2xl overflow-hidden backdrop-blur-sm">
-                    <div className="bg-gradient-to-r from-accent-400 to-accent-500 h-1"></div>
+                    <div className="bg-gradient-to-r from-secondary-400 to-secondary-500 h-1"></div>
                     
                     <div className="p-8 md:p-10">
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -60,7 +60,7 @@ function Signup(props){
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     required
-                                    className="w-full px-5 py-3 bg-primary-50 text-primary-900 placeholder-primary-400 rounded-xl border-2 border-primary-200 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-200 transition duration-300 font-poppins"
+                                    className="w-full px-5 py-3 bg-primary-50 text-primary-900 placeholder-primary-400 rounded-xl border-2 border-primary-200 focus:outline-none focus:border-secondary-400 focus:ring-2 focus:ring-secondary-200 transition duration-300 font-poppins"
                                 />
                             </div>
 
@@ -75,7 +75,7 @@ function Signup(props){
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="w-full px-5 py-3 bg-primary-50 text-primary-900 placeholder-primary-400 rounded-xl border-2 border-primary-200 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-200 transition duration-300 font-poppins"
+                                    className="w-full px-5 py-3 bg-primary-50 text-primary-900 placeholder-primary-400 rounded-xl border-2 border-primary-200 focus:outline-none focus:border-secondary-400 focus:ring-2 focus:ring-secondary-200 transition duration-300 font-poppins"
                                 />
                             </div>
 
@@ -90,7 +90,7 @@ function Signup(props){
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="w-full px-5 py-3 bg-primary-50 text-primary-900 placeholder-primary-400 rounded-xl border-2 border-primary-200 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-200 transition duration-300 font-poppins"
+                                    className="w-full px-5 py-3 bg-primary-50 text-primary-900 placeholder-primary-400 rounded-xl border-2 border-primary-200 focus:outline-none focus:border-secondary-400 focus:ring-2 focus:ring-secondary-200 transition duration-300 font-poppins"
                                 />
                             </div>
 
@@ -105,7 +105,7 @@ function Signup(props){
                             <button 
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-accent-400 to-accent-500 hover:from-accent-500 hover:to-accent-600 disabled:opacity-50 text-white font-montserrat font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105 active:scale-95 shadow-lg mt-8"
+                                className="w-full bg-gradient-to-r from-secondary-400 to-secondary-500 hover:from-secondary-500 hover:to-secondary-600 disabled:opacity-50 text-white font-montserrat font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105 active:scale-95 shadow-lg mt-8"
                             >
                                 {loading ? 'Creating Account...' : 'Create Account'}
                             </button>

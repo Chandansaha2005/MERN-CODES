@@ -34,7 +34,7 @@ function Home(){
     };
 
     return(
-        <div className="min-h-screen bg-gradient-to-br from-primary-100 via-primary-50 to-accent-50">
+        <div className="min-h-screen bg-gradient-to-br from-primary-100 via-primary-50 to-secondary-50">
             {/* Header */}
             <header className="bg-white shadow-lg sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
@@ -44,7 +44,7 @@ function Home(){
                     </div>
                     <button 
                         onClick={handleLogout}
-                        className="bg-gradient-to-r from-accent-400 to-accent-500 hover:from-accent-500 hover:to-accent-600 text-white font-poppins font-semibold py-2 px-6 rounded-lg transition duration-300 transform hover:scale-105"
+                        className="bg-gradient-to-r from-secondary-400 to-secondary-500 hover:from-secondary-500 hover:to-secondary-600 text-white font-poppins font-semibold py-2 px-6 rounded-lg transition duration-300 transform hover:scale-105"
                     >
                         Logout
                     </button>
@@ -55,13 +55,13 @@ function Home(){
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Stats Overview */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-accent-400">
+                    <div className="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-secondary-400">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="font-poppins text-primary-600 text-sm font-semibold">Total Users</p>
                                 <p className="font-montserrat text-4xl font-bold text-primary-900 mt-2">{data.length}</p>
                             </div>
-                            <div className="text-accent-400 text-5xl opacity-20">👥</div>
+                            <div className="text-secondary-400 text-5xl opacity-20">👥</div>
                         </div>
                     </div>
 
@@ -88,16 +88,16 @@ function Home(){
 
                 {/* Data Table Section */}
                 <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-                    <div className="bg-gradient-to-r from-accent-400 to-accent-500 px-6 py-6">
+                    <div className="bg-gradient-to-r from-secondary-400 to-secondary-500 px-6 py-6">
                         <h2 className="font-montserrat text-2xl font-bold text-white">Customer Directory</h2>
-                        <p className="font-poppins text-accent-100 text-sm mt-1">View all registered users</p>
+                        <p className="font-poppins text-secondary-100 text-sm mt-1">View all registered users</p>
                     </div>
 
                     {/* Loading State */}
                     {loading && (
                         <div className="flex justify-center items-center py-12">
                             <div className="text-center">
-                                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent-400"></div>
+                                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-secondary-400"></div>
                                 <p className="font-poppins text-primary-600 mt-4">Loading data...</p>
                             </div>
                         </div>
@@ -136,13 +136,13 @@ function Home(){
                                             className="hover:bg-primary-50 transition duration-300 ease-in-out"
                                         >
                                             <td className="px-6 py-4 font-poppins text-primary-900 text-sm font-semibold">
-                                                <span className="bg-accent-100 text-accent-700 px-3 py-1 rounded-full text-xs">
+                                                <span className="bg-secondary-100 text-secondary-700 px-3 py-1 rounded-full text-xs">
                                                     {index + 1}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 font-poppins text-primary-800 text-sm">
                                                 <div className="flex items-center">
-                                                    <div className="w-10 h-10 bg-gradient-to-br from-accent-300 to-accent-500 rounded-full flex items-center justify-center mr-3">
+                                                    <div className="w-10 h-10 bg-gradient-to-br from-secondary-300 to-secondary-500 rounded-full flex items-center justify-center mr-3">
                                                         <span className="text-white font-bold text-sm">{user.name.charAt(0).toUpperCase()}</span>
                                                     </div>
                                                     <span className="font-semibold">{user.name}</span>

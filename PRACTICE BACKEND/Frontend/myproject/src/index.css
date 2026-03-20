@@ -14,7 +14,7 @@ body {
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #faf8f3 0%, #ede6d9 100%);
+  background: linear-gradient(135deg, #faf8f6 0%, #eee7dc 100%);
   min-height: 100vh;
 }
 
@@ -26,4 +26,35 @@ code {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
+}
+
+/* Global transitions */
+button, a, input, textarea, select {
+  transition: all 0.3s ease;
+}
+
+/* Input focus styles with custom color */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(96, 130, 182, 0.1);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f7f4f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6082b6;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a5fa6;
 }

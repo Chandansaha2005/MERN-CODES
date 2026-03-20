@@ -1,2 +1,78 @@
 /* Styles handled by Tailwind CSS */
 
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', 'Montserrat', sans-serif;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eee7dc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6082b6;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a5fa6;
+}
+
+/* Smooth Transitions */
+button, input, a {
+  transition: all 0.3s ease;
+}
+
+/* Focus Styles */
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 0 3px rgba(96, 130, 182, 0.1);
+}
+
+/* Animation for page load */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom table row hover */
+table tbody tr {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+table tbody tr:hover {
+  background-color: #f7f4f0;
+  box-shadow: 0 2px 8px rgba(96, 130, 182, 0.1);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(96, 130, 182, 0.15);
+}
+
