@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Home(){
+function Home() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -11,17 +11,17 @@ function Home(){
         fetch("http://localhost:3001/fetch-detail", {
             method: "GET"
         })
-        .then((res) => res.json())
-        .then((s) => {
-            console.log(s, "userData");
-            setData(s.data || []);
-            setLoading(false);
-        })
-        .catch((err) => {
-            console.error(err);
-            setError("Failed to fetch data");
-            setLoading(false);
-        });
+            .then((res) => res.json())
+            .then((s) => {
+                console.log(s, "userData");
+                setData(s.data || []);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error(err);
+                setError("Failed to fetch data");
+                setLoading(false);
+            });
     }, []);
 
     const handleLogout = () => {
@@ -33,7 +33,7 @@ function Home(){
         console.log("Delete user:", id);
     };
 
-    return(
+    return (
         <div className="min-h-screen bg-gradient-to-br from-primary-100 via-primary-50 to-secondary-50">
             {/* Header */}
             <header className="bg-white shadow-lg sticky top-0 z-50">
@@ -42,7 +42,7 @@ function Home(){
                         <h1 className="font-montserrat text-3xl font-bold text-primary-900">Welcome User</h1>
                         <p className="font-poppins text-primary-600 text-sm mt-1">Manage your customers data</p>
                     </div>
-                    <button 
+                    <button
                         onClick={handleLogout}
                         className="bg-gradient-to-r from-secondary-400 to-secondary-500 hover:from-secondary-500 hover:to-secondary-600 text-white font-poppins font-semibold py-2 px-6 rounded-lg transition duration-300 transform hover:scale-105"
                     >
@@ -131,8 +131,8 @@ function Home(){
                                 </thead>
                                 <tbody className="divide-y divide-primary-100">
                                     {data.map((user, index) => (
-                                        <tr 
-                                            key={user._id} 
+                                        <tr
+                                            key={user._id}
                                             className="hover:bg-primary-50 transition duration-300 ease-in-out"
                                         >
                                             <td className="px-6 py-4 font-poppins text-primary-900 text-sm font-semibold">
