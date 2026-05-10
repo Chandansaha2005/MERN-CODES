@@ -1,4 +1,4 @@
-# Node.js Basics - Beginner's Guide
+# Node.js Basics 
 
 ## What is Node.js?
 
