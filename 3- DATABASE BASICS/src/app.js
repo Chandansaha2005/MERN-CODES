@@ -42,4 +42,18 @@ app.delete("/notes/:day",async(req,res)=>{
         message:"Note Deleted Succesfully"
     })
 })
+//PATCH
+app.patch("/notes/:day", async(req,res)=>{
+    const title=req.params.day
+    const description=req.body.description
+
+    await noteModel.findOneAndUpdate({
+        title:title
+    },{
+        description:description
+    })
+    res.status(200).json({
+        message:"Note Updated Sucessfully"
+    })
+})
 module.exports = app
