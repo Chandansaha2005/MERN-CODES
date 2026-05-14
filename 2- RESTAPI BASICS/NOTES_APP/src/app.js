@@ -4,13 +4,13 @@ const app=express()
 const notes=[]
 app.use(express.json())
 /* 
-note eg:
+note format:
     {
     "title":"note1",
     "des":"this is note 1"
     }
 */
-//POST /notes //sending data to server 
+//POST /notes // sending data to server 
 app.post("/notes",(req,res)=>{
     notes.push(req.body)
     res.status(201).json({
@@ -33,6 +33,18 @@ app.delete("/notes/:index",(req,res)=>{
     res.status(200).json({
         message:"Note deleted succesfully",
         notes: notes
+    })
+})
+
+//PATCH /notes/1 //Updating data in server
+app.patch("/notes/:index",(req,res)=>{
+    const index=req.params.index
+    const des=req.body.des
+
+    notes[index].des=des
+
+    res.status(200).json({
+        message:"Note updated succesfully"
     })
 })
 
