@@ -18,6 +18,13 @@ app.post("/notes",(req,res)=>{
     })
 })
 
+//GET /notes // fatching data from server
+app.get("/notes",(req,res)=>{
+    res.status(200).json({
+        message:"Note fatched succesfully",
+        notes: notes
+    })
+})
 
 
 
