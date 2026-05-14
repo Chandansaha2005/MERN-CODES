@@ -56,7 +56,7 @@ app.get("/route2", (req, res) => {
 
 // Catch-all route for undefined paths (uncomment to use)
 // app.get('*', (req, res) => {
-//     res.send("❌ Page not found (404)");
+//     res.send(" Page not found (404)");
 // });
 
 // POST Routes - Send data to server (Create operation)

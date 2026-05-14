@@ -10,7 +10,7 @@ npm run dev   --> backend
 npm start   --> frontend
 
   "start": "node index.js",
-    "dev": "nodemon index.js"
+     "dev": "nodemon index.js"
 
 -----------------------------------------------------------------
 
