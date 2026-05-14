@@ -31,4 +31,15 @@ app.get("/notes", async (req, res) => {
         notes: notes
     })
 })
+
+//DELETE
+app.delete("/notes/:day",async(req,res)=>{
+    const day = req.params.day
+    await noteModel.findOneAndDelete({
+        title:day
+    })
+    res.status(200).json({
+        message:"Note Deleted Succesfully"
+    })
+})
 module.exports = app
