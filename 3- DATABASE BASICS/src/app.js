@@ -11,10 +11,8 @@ app.post("/notes", async (req, res) => {
         title: data.title,
         description: data.description
     })
-    console.log("Data Posted")
-
     res.status(201).json({
-        message: "Note Created Succesfully"
+        message: "Note Created Sucessfully"
     })
 })
 
@@ -24,7 +22,7 @@ app.get("/notes", async (req, res) => {
     /* find()=> [{},{}] or []
        findOne()=>{} od null */
     const notes = await noteModel.findOne({
-        title:"day2"
+        title: "day2"
     })
     res.status(200).json({
         message: "Note Fatched Succesfully",
@@ -33,27 +31,27 @@ app.get("/notes", async (req, res) => {
 })
 
 //DELETE
-app.delete("/notes/:day",async(req,res)=>{
+app.delete("/notes/:day", async (req, res) => {
     const day = req.params.day
     await noteModel.findOneAndDelete({
-        title:day
+        title: day
     })
     res.status(200).json({
-        message:"Note Deleted Succesfully"
+        message: "Note Deleted Succesfully"
     })
 })
 //PATCH
-app.patch("/notes/:day", async(req,res)=>{
-    const title=req.params.day
-    const description=req.body.description
+app.patch("/notes/:day", async (req, res) => {
+    const title = req.params.day
+    const description = req.body.description
 
     await noteModel.findOneAndUpdate({
-        title:title
-    },{
-        description:description
+        title: title
+    }, {
+        description: description
     })
     res.status(200).json({
-        message:"Note Updated Sucessfully"
+        message: "Note Updated Sucessfully"
     })
 })
 module.exports = app

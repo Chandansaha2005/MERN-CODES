@@ -17,8 +17,8 @@ const Login = () => {
     try {
       const res = await axios.post('http://localhost:8000/api/auth/login', form);
       alert('Login Successful');
-      if(res.data.message==='Success')
-         navigate("/home");
+      if (res.data.message === 'Success')
+        navigate("/home");
       console.log(res.data);
     } catch (err) {
       alert(err.response?.data?.error || 'Login failed');
@@ -40,23 +40,23 @@ const Login = () => {
       <div className="form-wrapper">
         <div className="form-card-group">
           <div className="form-card-border" />
-          
+
           <div className="form-card">
             <h2>Login</h2>
-            
+
             <form onSubmit={handleSubmit} className="login-form">
               {/* Email Input */}
               <div className="form-field">
                 <label className="form-label">Email Address</label>
                 <div className="input-wrapper">
-                  <input 
-                    type="email" 
-                    name="email" 
-                    placeholder="Enter your email" 
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
                     onChange={handleChange}
                     onFocus={() => setFocusedField('email')}
                     onBlur={() => setFocusedField(null)}
-                    required 
+                    required
                     className="form-input"
                   />
                   {focusedField === 'email' && <div className="input-check">✓</div>}
@@ -67,14 +67,14 @@ const Login = () => {
               <div className="form-field">
                 <label className="form-label">Password</label>
                 <div className="input-wrapper">
-                  <input 
-                    type="password" 
-                    name="password" 
-                    placeholder="Enter your password" 
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter your password"
                     onChange={handleChange}
                     onFocus={() => setFocusedField('password')}
                     onBlur={() => setFocusedField(null)}
-                    required 
+                    required
                     className="form-input"
                   />
                   {focusedField === 'password' && <div className="input-check">✓</div>}
