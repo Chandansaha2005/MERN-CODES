@@ -26,6 +26,14 @@ app.get("/notes",(req,res)=>{
     })
 })
 
-
+//DELETE /notes/1 //deleting of any data from server 
+app.delete("/notes/:index",(req,res)=>{
+    const index=req.params.index /*if we call /notes/1 then index will be 1 , as we are using dynamic parameter "/:index"*/
+    delete notes[index]
+    res.status(200).json({
+        message:"Note deleted succesfully",
+        notes: notes
+    })
+})
 
 module.exports=app
