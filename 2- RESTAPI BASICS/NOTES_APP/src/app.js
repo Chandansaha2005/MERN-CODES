@@ -5,10 +5,10 @@ const notes=[]
 app.use(express.json())
 /* 
 note eg:
-{
-title:"note1",
-des:"this is note 1"
-}
+    {
+    "title":"note1",
+    "des":"this is note 1"
+    }
 */
 //POST /notes //sending data to server 
 app.post("/notes",(req,res)=>{
