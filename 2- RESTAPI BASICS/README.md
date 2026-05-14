@@ -6,9 +6,10 @@ This is a beginner-friendly REST API project built with **Node.js** and **Expres
 
 ## 📚 What is REST API?
 
-REST (Representational State Transfer) is an architectural style for building web services. It uses standard HTTP methods to perform operations on resources. 
+REST (Representational State Transfer) is an architectural style for building web services. It uses standard HTTP methods to perform operations on resources.
 
 **Key Concepts:**
+
 - **Resources**: Data entities (in this case, "notes")
 - **HTTP Methods**: Operations performed on resources (GET, POST, PUT/PATCH, DELETE)
 - **Endpoints**: URL paths that define where requests are sent
@@ -20,23 +21,26 @@ REST (Representational State Transfer) is an architectural style for building we
 This project implements four fundamental HTTP methods. Each method has a specific purpose:
 
 ### 1. **POST** - Create/Send Data to Server
+
 **Purpose:** Create new data on the server  
 **What it does:** Sends data from client to server to be stored
 
 #### Code Reference
+
 📁 File: `src/app.js` (Lines 10-17)
 
 ```javascript
-//POST /notes // sending data to server 
-app.post("/notes",(req,res)=>{
-    notes.push(req.body)
-    res.status(201).json({
-        message:"Note created successfully"
-    })
-})
+//POST /notes // sending data to server
+app.post("/notes", (req, res) => {
+  notes.push(req.body);
+  res.status(201).json({
+    message: "Note created successfully",
+  });
+});
 ```
 
 **How to use:**
+
 - **Endpoint:** `POST http://localhost:3000/notes`
 - **Send Data (JSON):**
   ```json
@@ -56,23 +60,26 @@ app.post("/notes",(req,res)=>{
 ---
 
 ### 2. **GET** - Retrieve Data from Server
+
 **Purpose:** Fetch data from the server  
 **What it does:** Retrieves stored data without modifying it
 
 #### Code Reference
+
 📁 File: `src/app.js` (Lines 19-25)
 
 ```javascript
 //GET /notes // fatching data from server
-app.get("/notes",(req,res)=>{
-    res.status(200).json({
-        message:"Note fatched succesfully",
-        notes: notes
-    })
-})
+app.get("/notes", (req, res) => {
+  res.status(200).json({
+    message: "Note fatched succesfully",
+    notes: notes,
+  });
+});
 ```
 
 **How to use:**
+
 - **Endpoint:** `GET http://localhost:3000/notes`
 - **Send Data:** No body needed (just the URL)
 - **Response (Status 200 - OK):**
@@ -90,25 +97,30 @@ app.get("/notes",(req,res)=>{
 ---
 
 ### 3. **DELETE** - Remove Data from Server
+
 **Purpose:** Delete existing data from the server  
 **What it does:** Removes a specific note by its index
 
 #### Code Reference
+
 📁 File: `src/app.js` (Lines 27-35)
 
 ```javascript
-//DELETE /notes/1 //deleting of any data from server 
-app.delete("/notes/:index",(req,res)=>{
-    const index=req.params.index /*if we call /notes/1 then index will be 1 , as we are using dynamic parameter "/:index"*/
-    delete notes[index]
-    res.status(200).json({
-        message:"Note deleted succesfully",
-        notes: notes
-    })
-})
+//DELETE /notes/1 //deleting of any data from server
+app.delete("/notes/:index", (req, res) => {
+  const index =
+    req.params
+      .index; /*if we call /notes/1 then index will be 1 , as we are using dynamic parameter "/:index"*/
+  delete notes[index];
+  res.status(200).json({
+    message: "Note deleted succesfully",
+    notes: notes,
+  });
+});
 ```
 
 **How to use:**
+
 - **Endpoint:** `DELETE http://localhost:3000/notes/1`
   - `:index` is a **dynamic parameter** (placeholder for the note number)
   - If you call `/notes/1`, the index will be `1`
@@ -118,9 +130,7 @@ app.delete("/notes/:index",(req,res)=>{
   ```json
   {
     "message": "Note deleted succesfully",
-    "notes": [
-      { "title": "Second Note", "des": "Another note" }
-    ]
+    "notes": [{ "title": "Second Note", "des": "Another note" }]
   }
   ```
 - **Real-world example:** User clicks delete button → deletes the note at that position
@@ -128,27 +138,30 @@ app.delete("/notes/:index",(req,res)=>{
 ---
 
 ### 4. **PATCH** - Update/Modify Data on Server
+
 **Purpose:** Update existing data on the server  
 **What it does:** Modifies a specific note by its index (updates only the description)
 
 #### Code Reference
+
 📁 File: `src/app.js` (Lines 37-48)
 
 ```javascript
 //PATCH /notes/1 //Updating data in server
-app.patch("/notes/:index",(req,res)=>{
-    const index=req.params.index
-    const des=req.body.des
+app.patch("/notes/:index", (req, res) => {
+  const index = req.params.index;
+  const des = req.body.des;
 
-    notes[index].des=des
+  notes[index].des = des;
 
-    res.status(200).json({
-        message:"Note updated succesfully"
-    })
-})
+  res.status(200).json({
+    message: "Note updated succesfully",
+  });
+});
 ```
 
 **How to use:**
+
 - **Endpoint:** `PATCH http://localhost:3000/notes/0`
   - `:index` is a **dynamic parameter** - use the position of the note you want to update
 - **Send Data (JSON):**
@@ -188,26 +201,32 @@ Each note follows this format:
 ## 🚀 How to Run This Project
 
 ### Prerequisites
+
 - Node.js installed on your computer
 - npm (Node Package Manager)
 
 ### Setup Steps
 
 1. **Navigate to the project folder:**
+
    ```bash
    cd "2- RESTAPI BASICS/NOTES_APP"
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 3. **Start the server:**
+
    ```bash
    npm start
    ```
+
    or with nodemon (auto-reload on changes):
+
    ```bash
    npx nodemon server.js
    ```
@@ -224,6 +243,7 @@ Each note follows this format:
 ## 🧪 Testing the API
 
 You can test these endpoints using:
+
 - **Postman** (GUI Tool) - Recommended for beginners ⭐
 - **Thunder Client** (VS Code Extension)
 - **cURL** (Command line)
@@ -254,6 +274,7 @@ You can test these endpoints using:
 #### **TEST 1: Create a Note (POST Request)**
 
 **Setup:**
+
 1. In the URL bar, paste: `http://localhost:3000/notes`
 2. Click the dropdown menu (currently shows "GET") and select **"POST"**
 3. Click on the **"Body"** tab below the URL
@@ -261,6 +282,7 @@ You can test these endpoints using:
 5. From the dropdown on the right (shows "Text"), select **"JSON"**
 
 **Send this data:**
+
 ```json
 {
   "title": "My First Note",
@@ -269,6 +291,7 @@ You can test these endpoints using:
 ```
 
 **Click Send button and you should see:**
+
 ```json
 {
   "message": "Note created successfully"
@@ -282,11 +305,13 @@ You can test these endpoints using:
 #### **TEST 2: Get All Notes (GET Request)**
 
 **Setup:**
+
 1. In the URL bar, paste: `http://localhost:3000/notes`
 2. The dropdown should already show **"GET"**
 3. Click the **"Body"** tab - it will be empty (GET doesn't need a body)
 
 **Click Send button and you should see:**
+
 ```json
 {
   "message": "Note fatched succesfully",
@@ -308,6 +333,7 @@ You can test these endpoints using:
 #### **TEST 3: Update a Note (PATCH Request)**
 
 **Setup:**
+
 1. In the URL bar, paste: `http://localhost:3000/notes/0`
    - The `/0` means update the first note (index 0)
    - Use `/1` for second note, `/2` for third note, etc.
@@ -316,6 +342,7 @@ You can test these endpoints using:
 4. Select **"raw"** and then **"JSON"**
 
 **Send this data:**
+
 ```json
 {
   "des": "Updated description - I learned about REST APIs!"
@@ -323,6 +350,7 @@ You can test these endpoints using:
 ```
 
 **Click Send button and you should see:**
+
 ```json
 {
   "message": "Note updated succesfully"
@@ -338,6 +366,7 @@ You can test these endpoints using:
 #### **TEST 4: Delete a Note (DELETE Request)**
 
 **Setup:**
+
 1. In the URL bar, paste: `http://localhost:3000/notes/0`
    - The `/0` means delete the first note
    - Use `/1` for second note, `/2` for third note, etc.
@@ -345,6 +374,7 @@ You can test these endpoints using:
 3. Click on the **"Body"** tab - it will be empty (DELETE doesn't need a body)
 
 **Click Send button and you should see:**
+
 ```json
 {
   "message": "Note deleted succesfully",
@@ -368,6 +398,7 @@ You can test these endpoints using:
 4. Now you can save all your requests in one place
 
 **Save each request to the collection:**
+
 - After creating a request, click **"Save"** button
 - Select **"Notes App API"** collection
 - Give it a name like "Create Note", "Get All Notes", etc.
@@ -378,29 +409,33 @@ Now all your API requests are organized in one collection! 📚
 
 ### Quick Reference: Postman Request Setup
 
-| Method | URL | Body | What It Does |
-|--------|-----|------|--------------|
-| **POST** | `http://localhost:3000/notes` | `{"title":"...", "des":"..."}` | Create a new note |
-| **GET** | `http://localhost:3000/notes` | None | Get all notes |
-| **PATCH** | `http://localhost:3000/notes/0` | `{"des":"..."}` | Update note at index 0 |
-| **DELETE** | `http://localhost:3000/notes/0` | None | Delete note at index 0 |
+| Method     | URL                             | Body                           | What It Does           |
+| ---------- | ------------------------------- | ------------------------------ | ---------------------- |
+| **POST**   | `http://localhost:3000/notes`   | `{"title":"...", "des":"..."}` | Create a new note      |
+| **GET**    | `http://localhost:3000/notes`   | None                           | Get all notes          |
+| **PATCH**  | `http://localhost:3000/notes/0` | `{"des":"..."}`                | Update note at index 0 |
+| **DELETE** | `http://localhost:3000/notes/0` | None                           | Delete note at index 0 |
 
 ---
 
 ### Common Postman Issues & Solutions
 
 **❌ "Cannot GET /notes" or Connection Error**
+
 - Make sure your server is running (`npm start` or `npx nodemon server.js`)
 - Check that you're using `localhost:3000` (not 3001 or another port)
 
 **❌ "Body tab is grayed out"**
+
 - You're using GET or DELETE → Click away and back to enable the Body tab for future requests
 
 **❌ "Response shows empty brackets []"**
+
 - This is normal! It means all notes were deleted
 - Create new notes with POST to populate the array
 
 **❌ "Bad Request" or 400 Error**
+
 - Make sure your JSON is valid (no missing commas or quotes)
 - Make sure the Body is set to "raw" and "JSON"
 
@@ -422,6 +457,7 @@ Now all your API requests are organized in one collection! 📚
 ### Quick Test Examples (for reference)
 
 **1. Create a Note (POST):**
+
 ```bash
 curl -X POST http://localhost:3000/notes \
   -H "Content-Type: application/json" \
@@ -429,11 +465,13 @@ curl -X POST http://localhost:3000/notes \
 ```
 
 **2. Get All Notes (GET):**
+
 ```bash
 curl http://localhost:3000/notes
 ```
 
 **3. Update a Note (PATCH):**
+
 ```bash
 curl -X PATCH http://localhost:3000/notes/0 \
   -H "Content-Type: application/json" \
@@ -441,6 +479,7 @@ curl -X PATCH http://localhost:3000/notes/0 \
 ```
 
 **4. Delete a Note (DELETE):**
+
 ```bash
 curl -X DELETE http://localhost:3000/notes/0
 ```
@@ -461,14 +500,14 @@ NOTES_APP/
 
 ## 🎓 Key Learning Points
 
-| Concept | What We Learned |
-|---------|-----------------|
-| **HTTP Methods** | POST, GET, PATCH, DELETE and their purposes |
-| **Status Codes** | 201 (Created), 200 (OK) |
-| **Dynamic Routes** | Using `:index` parameter to identify specific resources |
-| **Request Body** | Sending JSON data with POST and PATCH |
-| **Response Format** | Returning JSON with messages and data |
-| **Arrays in Server** | Storing data in memory (temporary, resets on restart) |
+| Concept              | What We Learned                                         |
+| -------------------- | ------------------------------------------------------- |
+| **HTTP Methods**     | POST, GET, PATCH, DELETE and their purposes             |
+| **Status Codes**     | 201 (Created), 200 (OK)                                 |
+| **Dynamic Routes**   | Using `:index` parameter to identify specific resources |
+| **Request Body**     | Sending JSON data with POST and PATCH                   |
+| **Response Format**  | Returning JSON with messages and data                   |
+| **Arrays in Server** | Storing data in memory (temporary, resets on restart)   |
 
 ---
 
